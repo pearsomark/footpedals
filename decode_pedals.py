@@ -2,15 +2,21 @@
 '''
 Created on 21/12/2013
  -----------------------------------------------------------------------------------------------
-|31|  |  |  |  |  |  |24|  |  |  |  |  |  |  |  |15|14|  |  |  |10|  |  |  |  |  |  |  |  |  | 0|
+|31|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |15|  |  |  |  |  |  |  |  |  |  |  |  |  |  | 0|
  -----------------------------------------------------------------------------------------------
-|                       |                       |  |  |           |                              |
-31 - 24 Left Pos
-24 - 16 Right Pos
-15      Left Switch
-14      Right Switch
-13 - 10 Seconds diffreence
-09 - 00 Miliseconds
+|                                               |                                               |
+
+31 - 16 Left pos
+15 - 00 Right pos
+
+ -----------------------------------------------------------------------------------------------
+|31|30|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | 0|
+ -----------------------------------------------------------------------------------------------
+|  |  |                                                                                         |
+
+31      Left Switch
+30      Right Switch
+29 - 00 timestamp
 
 @author: markp
 '''
@@ -54,20 +60,17 @@ class StartQT4(QtGui.QMainWindow):
     def unpackData(self):
         t1 = 0
         tsec = 0
-        upperLimit = 150
+        upperLimit = 1024
         with open(self.filename, 'rb') as inh:
-          fb = inh.read(4)
+          fb = inh.read(8)
           while fb:
-            d = struct.unpack('<L', fb)[0]
-            tp = d & 0x0FFF
-            ms = d & 0x03FF
-            sec = (d & 0x3C00) >> 10
-            tsec += sec
-            tpoint = "%s.%03d" % (tsec, ms)
-            leftSw = (d & 0x4000) >> 14
-            rightSw = (d & 0x8000) >> 15
-            leftPos =  (d & 0xFF000000) >> 24
-            rightPos = (d & 0x00FF0000) >> 16
+            d1 = struct.unpack('<L', fb)[0]
+            d2 = struct.unpack('<L', fb)[4]
+            tpoint =   (d2 & 0x00FFFFFF)
+            leftSw =   (d2 & 0x40000000) >> 14
+            rightSw =  (d2 & 0x80000000) >> 15
+            leftPos =  (d1 & 0xFFFF0000) >> 16
+            rightPos = (d1 & 0x0000FFFF)
             if leftPos < upperLimit and rightPos < upperLimit:
               t1 = tp
               self.cur.execute("INSERT INTO fpdata VALUES(?,?,?,?,?)", (tpoint, leftPos, rightPos, leftSw, rightSw))
