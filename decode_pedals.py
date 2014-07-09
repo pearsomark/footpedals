@@ -58,23 +58,24 @@ class StartQT4(QtGui.QMainWindow):
       self.showFile()
 
     def unpackData(self):
-        t1 = 0
         tsec = 0
         upperLimit = 1024
         with open(self.filename, 'rb') as inh:
-          fb = inh.read(8)
-          while fb:
-            d1 = struct.unpack('<L', fb)[0]
-            d2 = struct.unpack('<L', fb)[4]
-            tpoint =   (d2 & 0x00FFFFFF)
-            leftSw =   (d2 & 0x40000000) >> 14
-            rightSw =  (d2 & 0x80000000) >> 15
-            leftPos =  (d1 & 0xFFFF0000) >> 16
-            rightPos = (d1 & 0x0000FFFF)
-            if leftPos < upperLimit and rightPos < upperLimit:
-              t1 = tp
-              self.cur.execute("INSERT INTO fpdata VALUES(?,?,?,?,?)", (tpoint, leftPos, rightPos, leftSw, rightSw))
-            fb = inh.read(4)
+          fb = inh.read(4)
+	  while fb:
+	    d1 = struct.unpack('<L', fb)[0]
+	    fb = inh.read(4)
+	    d2 = struct.unpack('<L', fb)[0]
+	    #print hex(d1), hex(d2)
+	    #d2 = struct.unpack('<L', fb)[4]
+	    tpoint =   (d2 & 0x00FFFFFF)
+	    leftSw =   (d2 & 0x40000000) >> 14
+	    rightSw =  (d2 & 0x80000000) >> 15
+	    leftPos =  (d1 & 0xFFFF0000) >> 16
+	    rightPos = (d1 & 0x0000FFFF)
+	    if leftPos < upperLimit and rightPos < upperLimit:
+	      self.cur.execute("INSERT INTO fpdata VALUES(?,?,?,?,?)", (tpoint, leftPos, rightPos, leftSw, rightSw))
+	    fb = inh.read(4)
         self.con.commit()
         # Remove invalid datapoints from end of buffer
         self.cur.execute("SELECT round(max(tp)) from fpdata")
