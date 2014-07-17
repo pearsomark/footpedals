@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>743</width>
-    <height>452</height>
+    <width>759</width>
+    <height>487</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -79,26 +79,6 @@
      </rect>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="maxLeft">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>120</y>
-      <width>51</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="maxRight">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>120</y>
-      <width>51</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
@@ -123,16 +103,6 @@
     </property>
     <property name="text">
      <string>R Max</string>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="numberOfRows">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>180</y>
-      <width>81</width>
-      <height>31</height>
-     </rect>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -213,18 +183,142 @@
      <string>Right Sw</string>
     </property>
    </widget>
+   <widget class="QLabel" name="maxRightVal">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>120</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="maxLeftVal">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="numRowsVal">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>70</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>743</width>
-     <height>21</height>
+     <width>759</width>
+     <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionLoad"/>
+    <addaction name="actionSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Data">
+    <property name="title">
+     <string>&amp;Data</string>
+    </property>
+    <addaction name="actionNormalise"/>
+   </widget>
+   <widget class="QMenu" name="menu_Plot">
+    <property name="title">
+     <string>&amp;Plot</string>
+    </property>
+    <addaction name="actionAll"/>
+    <addaction name="actionLeft_Pos"/>
+    <addaction name="actionRight_Pos"/>
+    <addaction name="actionLeft_Sw"/>
+    <addaction name="actionRight_Sw"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Data"/>
+   <addaction name="menu_Plot"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLoad">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionNormalise">
+   <property name="text">
+    <string>Normalise</string>
+   </property>
+  </action>
+  <action name="actionAll">
+   <property name="text">
+    <string>All</string>
+   </property>
+  </action>
+  <action name="actionLeft_Pos">
+   <property name="text">
+    <string>Left Pos</string>
+   </property>
+  </action>
+  <action name="actionRight_Pos">
+   <property name="text">
+    <string>Right Pos</string>
+   </property>
+  </action>
+  <action name="actionLeft_Sw">
+   <property name="text">
+    <string>Left Sw</string>
+   </property>
+  </action>
+  <action name="actionRight_Sw">
+   <property name="text">
+    <string>Right Sw</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>

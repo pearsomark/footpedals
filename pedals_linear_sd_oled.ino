@@ -13,7 +13,7 @@ boolean enableKbd = true;
 boolean enableTrnk = true;
 boolean timingPulsetrain = true;
 
-#define VERSION                 "FPL V0.63"
+#define VERSION                 "FPL V0.66"
 #define BLOCK_COUNT             1500U
 #define BLOCKSIZE               512UL
 #define TIMING_PULSE_INTERVAL   5000UL
@@ -36,8 +36,8 @@ const int pulsePin       = 7;
 const int chipSelect     = 10;
 const int oledReset      = 14;
 const uint8_t kkey_space = 15;
-const uint8_t kkey_x     = 16;
-const uint8_t kkey_t     = 17;
+const uint8_t kkey_t     = 16;
+const uint8_t kkey_x     = 17;
 
 Encoder footLeft(enc_left_a, enc_left_b);
 Encoder footRight(enc_right_a, enc_right_b);
@@ -136,6 +136,7 @@ void loop() {
         }
     }
     
+    // output timing pulse while recording
     if (timingPulsetrain && recordFlag) {
         if ((ts - timepulseref) > TIMING_PULSE_INTERVAL)
             sendTimingPulse();
@@ -150,16 +151,16 @@ void loop() {
     // new datapoint if something has moved
     if (newLeft != positionLeft || newRight != positionRight) {
         rts = millis()-timeref;
-        uint32_t ms = 0;
-        uint32_t sec = 0;
-        if (rts < 1000) {
-            ms = rts;
-    } else {
-        ms = rts % 1000;
-        sec = (rts / 1000) - seconds;
-        seconds = rts / 1000;
-    }
-    uint32_t tp = ms | (sec << 10);
+//         uint32_t ms = 0;
+//         uint32_t sec = 0;
+//         if (rts < 1000) {
+//             ms = rts;
+//     } else {
+//         ms = rts % 1000;
+//         sec = (rts / 1000) - seconds;
+//         seconds = rts / 1000;
+//     }
+//     uint32_t tp = ms | (sec << 10);
     
     
     // get foot position
@@ -173,16 +174,16 @@ void loop() {
       if (right < FUDGE_FACTOR)
         right = 0;
     }   
-    String dataString = "";
-    if (recordFlag)
-      dataString += String(rts) + ", ";
-    dataString += String(left) + ", ";
-    dataString += String(right);
+    //String dataString = "";
+    //if (recordFlag)
+      //dataString += String(rts) + ", ";
+    //dataString += String(left) + ", ";
+    //dataString += String(right);
     
     lstate = digitalRead(sw_left);
     rstate = digitalRead(sw_right);
     if (lstate == LOW) {
-      dataString += ", 1";
+      //dataString += ", 1";
       if (ldown == false) {
         ldown = true;
         if (rdown == false && enableKbd)
@@ -191,12 +192,12 @@ void loop() {
       }
     }
     if (lstate == HIGH) {
-      dataString += ", 0";
+      //dataString += ", 0";
       ldown = false;
     }
   
     if (rstate == LOW) {
-      dataString += ", 1";
+      //dataString += ", 1";
       if (rdown == false) {
         rdown = true;
         if (ldown == false && enableKbd)
@@ -205,14 +206,16 @@ void loop() {
       }
     }
     if (rstate == HIGH) {
-      dataString += ", 0";
+      //dataString += ", 0";
       rdown = false;
     }
 
      
     if (recordFlag) {
       if (sdstatus) {
-        iCache[bytecount++] = tp | (left << 24) | (right << 16) | (rdown << 15) | (ldown << 14);
+	iCache[bytecount++] = (left << 16) | right;
+	iCache[bytecount++] = rts |  (rdown << 31) | (ldown << 30);
+	//iCache[bytecount++] = rts;
 //        iCache[bytecount++] = tp | (left << 24) | (0xDE << 16);
          
         if (bytecount > 127) {
